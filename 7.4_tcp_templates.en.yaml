@@ -1,0 +1,365 @@
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: b61d42a417ab4ee992b7e6d5d3b044eb
+      template: 'Template Unix TCP connections'
+      name: 'Template Unix TCP connections'
+      description: 'Collect statistics about Unix TCP connections'
+      groups:
+        - name: Templates
+      items:
+        - uuid: df54f648111441fcac815a2da8c45e56
+          name: 'JSON data'
+          key: tcp_conn.json
+          history: 1d
+          value_type: CHAR
+        - uuid: 065ceb23962147e1881aed4c1db6a96c
+          name: CLOSED
+          type: DEPENDENT
+          key: 'tcp_conn[CLOSED]'
+          history: 30d
+          description: 'number of TCP ports in the pseudo-state CLOSED, with no associated TCB (Transmission Control Block)'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.CLOSED
+          master_item:
+            key: tcp_conn.json
+        - uuid: 1fc6dc15458f4933b72b13f057042dc1
+          name: CLOSE_WAIT
+          type: DEPENDENT
+          key: 'tcp_conn[CLOSE_WAIT]'
+          history: 30d
+          description: 'number of TCP ports awaiting a connection termination request from an application process'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.CLOSE_WAIT
+          master_item:
+            key: tcp_conn.json
+        - uuid: b54498aa60fc4416946c94e84c0c41fc
+          name: CLOSING
+          type: DEPENDENT
+          key: 'tcp_conn[CLOSING]'
+          history: 30d
+          description: 'number of TCP ports awaiting a connection termination request from a remote host'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.CLOSING
+          master_item:
+            key: tcp_conn.json
+        - uuid: a7388ad7b8214a2baca53a80650d45a0
+          name: ESTABLISHED
+          type: DEPENDENT
+          key: 'tcp_conn[ESTABLISHED]'
+          history: 30d
+          description: 'number of TCP ports in a normal state, with a connection established and ready for data transfer'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.ESTABLISHED
+          master_item:
+            key: tcp_conn.json
+        - uuid: 299035a92c7541fda2dc9e80586c6acf
+          name: FIN_WAIT_2
+          type: DEPENDENT
+          key: 'tcp_conn[FIN_WAIT2]'
+          history: 30d
+          description: 'number of TCP ports waiting for connection termination requests from remote hosts, or waiting for confirmation of responses to termination requests already sent'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.FIN_WAIT2
+          master_item:
+            key: tcp_conn.json
+        - uuid: 652f95ef538e4b7fbe19f98e54dcd6ac
+          name: LAST_ACK
+          type: DEPENDENT
+          key: 'tcp_conn[LAST_ACK]'
+          history: 30d
+          description: 'number of TCP ports awaiting confirmation of a response to a connection termination request sent to a remote host'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.LAST_ACK
+          master_item:
+            key: tcp_conn.json
+        - uuid: 6b2ce45499cc4b9d833de8533c49a77d
+          name: LISTEN
+          type: DEPENDENT
+          key: 'tcp_conn[LISTEN]'
+          history: 30d
+          description: 'number of TCP ports awaiting connection requests from remote hosts'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.LISTEN
+          master_item:
+            key: tcp_conn.json
+        - uuid: 6a7c4d0b6bc347068c07fb58c0b71d71
+          name: SYN_RECEIVED
+          type: DEPENDENT
+          key: 'tcp_conn[SYN_RECV]'
+          history: 30d
+          description: 'number of TCP ports that have received a SYN segment, sent back a corresponding SYN/ACK segment, and are awaiting confirmation of the connection'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.SYN_RECV
+          master_item:
+            key: tcp_conn.json
+        - uuid: 2493c13cb57245758d93ed6369a78c3f
+          name: SYN_SENT
+          type: DEPENDENT
+          key: 'tcp_conn[SYN_SENT]'
+          history: 30d
+          description: 'number of TCP ports that have finished sending a connection request and are awaiting a response acknowledgment and a corresponding connection request'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.SYN_SENT
+          master_item:
+            key: tcp_conn.json
+        - uuid: 10ce9eece222438cbbc26f5044cf226d
+          name: TIME_WAIT
+          type: DEPENDENT
+          key: 'tcp_conn[TIME_WAIT]'
+          history: 30d
+          description: 'number of TCP ports waiting for a duration sufficient to ensure that the remote host has received the acknowledgment for a connection termination request'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.TIME_WAIT
+          master_item:
+            key: tcp_conn.json
+        - uuid: 665fe595cb1c406da8cbc787da9b9aa3
+          name: UNKNOWN
+          type: DEPENDENT
+          key: 'tcp_conn[UNKNOWN]'
+          history: 30d
+          description: 'number of TCP ports in unknown state'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tcp_conn.UNKNOWN
+          master_item:
+            key: tcp_conn.json
+      tags:
+        - tag: component
+          value: tcp
+      dashboards:
+        - uuid: b2d3b699239c450593175a229ff3b0d1
+          name: 'Network TCP'
+          display_period: '60'
+          auto_start: 'NO'
+          pages:
+            - widgets:
+                - type: svggraph
+                  name: 'TCP connection states'
+                  width: '72'
+                  height: '8'
+                  fields:
+                    - type: INTEGER
+                      name: ds.0.color_palette
+                      value: '0'
+                    - type: INTEGER
+                      name: ds.0.fill
+                      value: '0'
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: CLOSED
+                    - type: STRING
+                      name: ds.0.items.1
+                      value: CLOSE_WAIT
+                    - type: STRING
+                      name: ds.0.items.2
+                      value: CLOSING
+                    - type: STRING
+                      name: ds.0.items.3
+                      value: ESTABLISHED
+                    - type: STRING
+                      name: ds.0.items.4
+                      value: FIN_WAIT_2
+                    - type: STRING
+                      name: ds.0.items.5
+                      value: LAST_ACK
+                    - type: STRING
+                      name: ds.0.items.6
+                      value: LISTEN
+                    - type: STRING
+                      name: ds.0.items.7
+                      value: SYN_RECEIVED
+                    - type: STRING
+                      name: ds.0.items.8
+                      value: SYN_SENT
+                    - type: STRING
+                      name: ds.0.items.9
+                      value: TIME_WAIT
+                    - type: STRING
+                      name: ds.0.items.10
+                      value: UNKNOWN
+                    - type: INTEGER
+                      name: ds.0.transparency
+                      value: '0'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '4'
+                    - type: INTEGER
+                      name: legend_lines_mode
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: OEHNG
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                    - type: INTEGER
+                      name: simple_triggers
+                      value: '1'
+                    - type: INTEGER
+                      name: working_time
+                      value: '1'
+  graphs:
+    - uuid: a432d8884b9644fa8f35844b05f74df5
+      name: 'TCP connection states - graph'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: BOLD_LINE
+          color: '004400'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[SYN_SENT]'
+        - sortorder: '1'
+          drawtype: BOLD_LINE
+          color: 00EE00
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[SYN_RECV]'
+        - sortorder: '2'
+          drawtype: BOLD_LINE
+          color: '999999'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[LAST_ACK]'
+        - sortorder: '3'
+          drawtype: BOLD_LINE
+          color: FF66FF
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[FIN_WAIT2]'
+        - sortorder: '4'
+          drawtype: BOLD_LINE
+          color: '000066'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[CLOSING]'
+        - sortorder: '5'
+          drawtype: BOLD_LINE
+          color: FF6666
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[CLOSE_WAIT]'
+        - sortorder: '6'
+          drawtype: BOLD_LINE
+          color: '555555'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[CLOSED]'
+        - sortorder: '7'
+          drawtype: BOLD_LINE
+          color: FF99FF
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[LISTEN]'
+        - sortorder: '8'
+          drawtype: BOLD_LINE
+          color: '009900'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[ESTABLISHED]'
+        - sortorder: '9'
+          drawtype: BOLD_LINE
+          color: 6666FF
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[TIME_WAIT]'
+        - sortorder: '10'
+          drawtype: BOLD_LINE
+          color: BB2A02
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[UNKNOWN]'
+    - uuid: 10221d1244dc4a65825ba2ee366ab52e
+      name: 'TCP connection states - stack'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: BOLD_LINE
+          color: '004400'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[SYN_SENT]'
+        - sortorder: '1'
+          drawtype: BOLD_LINE
+          color: 00EE00
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[SYN_RECV]'
+        - sortorder: '2'
+          drawtype: BOLD_LINE
+          color: '999999'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[LAST_ACK]'
+        - sortorder: '3'
+          drawtype: BOLD_LINE
+          color: FF66FF
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[FIN_WAIT2]'
+        - sortorder: '4'
+          drawtype: BOLD_LINE
+          color: '000066'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[CLOSING]'
+        - sortorder: '5'
+          drawtype: BOLD_LINE
+          color: FF6666
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[CLOSE_WAIT]'
+        - sortorder: '6'
+          drawtype: BOLD_LINE
+          color: '555555'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[CLOSED]'
+        - sortorder: '7'
+          drawtype: BOLD_LINE
+          color: FF99FF
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[LISTEN]'
+        - sortorder: '8'
+          drawtype: BOLD_LINE
+          color: '009900'
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[ESTABLISHED]'
+        - sortorder: '9'
+          drawtype: BOLD_LINE
+          color: 6666FF
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[TIME_WAIT]'
+        - sortorder: '10'
+          drawtype: BOLD_LINE
+          color: BB2A02
+          item:
+            host: 'Template Unix TCP connections'
+            key: 'tcp_conn[UNKNOWN]'
